@@ -1,0 +1,22 @@
+version: "3.7"
+
+services:
+  project_manager:
+    build: ./project_manager
+    container_name: 'project_manager'
+    restart: always
+    env_file:
+      - project_manager/.env
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - '8000:8000'
+
+  nginx:
+    build: ./nginx
+    container_name: 'nginx'
+    restart: always
+    depends_on:
+      - project_manager
+    ports:
+      - "80:80"
+

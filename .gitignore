@@ -1,0 +1,14 @@
+venv/
+*.sqlite3
+.idea/
+**/__pycache__/
+__pycache__/
+**/.idea/
+.env
+enviroments/
+chat/static/
+storage/
+.fleet/
+dump.rdb
+diagrams.png
+project_manager/__pycache__/urls.cpython-36.pyc
