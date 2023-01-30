@@ -12,3 +12,5 @@ storage/
 dump.rdb
 diagrams.png
 project_manager/__pycache__/urls.cpython-36.pyc
+.vs
+.vs/
