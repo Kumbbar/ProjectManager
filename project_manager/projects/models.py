@@ -3,10 +3,12 @@ from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models import QuerySet
 
+import os
 from dataclasses import dataclass
 from datetime import datetime, date
 
 from .validators import check_file_size
+from project_manager.settings import MEDIA_URL
 
 
 
@@ -40,13 +42,25 @@ class BaseDescription(models.Model):
 
 
 class BaseFileStorage(models.Model):
-    file = models.FileField(upload_to='//')
+    path = '//'
+    base_params = {
+        'max_length': 100,
+        'validators': [check_file_size]
+    }
+    
+    file = models.FileField(upload_to=path)
     
     class Meta:
         abstract = True
 
     def __str__(self) -> str:
-        return f'{self.file.name}'
+        return f'{self.file}'
+    
+    def get_filename(self) -> str:
+        return os.path.basename(self.file.name)
+
+    def get_absolute_url(self) -> str:
+        return f'{MEDIA_URL}{self.file.name}'
 
 
 # MODELS
@@ -114,6 +128,9 @@ class Task(BaseDescription):
     
     def get_task_events(self) -> QuerySet:
         return TaskEvent.objects.filter(task=self)
+    
+    def get_task_files(self) -> QuerySet:
+        return TaskFileStorage.objects.filter(task=self)
 
 
 class TaskEvent(BaseDescription):
@@ -127,28 +144,36 @@ class TaskEvent(BaseDescription):
 
 # FILE MODELS
 class ProjectFileStorage(BaseFileStorage):
-    file = models.FileField(upload_to='projects/%Y/%m/%d/', validators=[check_file_size])
+    path ='projects/%Y/%m/%d/'
+    file = models.FileField(upload_to=path, **BaseFileStorage.base_params)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=False)
+
     class Meta:
         db_table = 'project_files'
 
 
 class TaskFileStorage(BaseFileStorage):
-    file = models.FileField(upload_to='tasks/%Y/%m/%d/', validators=[check_file_size])
+    path = 'tasks/%Y/%m/%d/'
+    file = models.FileField(upload_to=path, **BaseFileStorage.base_params)
     task = models.ForeignKey(Task, on_delete=models.CASCADE, null=False)
+
     class Meta:
         db_table = 'task_files'
 
 
 class TaskEventFileStorage(BaseFileStorage):
-    file = models.FileField(upload_to='task_events/%Y/%m/%d/', validators=[check_file_size])
+    path = 'task_events/%Y/%m/%d/'
+    file = models.FileField(upload_to=path, **BaseFileStorage.base_params)
     task_event = models.ForeignKey(TaskEvent, on_delete=models.CASCADE, null=False)
+
     class Meta:
         db_table = 'task_event_files' 
 
 
 class DocumenationNoteFileStorage(BaseFileStorage):
-    file = models.FileField(upload_to='documentation_notes/%Y/%m/%d/', validators=[check_file_size])
+    path = 'documentation_notes/%Y/%m/%d/'
+    file = models.FileField(upload_to=path, **BaseFileStorage.base_params)
     documenation_note = models.ForeignKey(DocumenationNote, on_delete=models.CASCADE, null=False)
+
     class Meta:
         db_table = 'documentation_files' 

@@ -36,7 +36,7 @@
                             {% if tasks|length > 0 %}
                                 <colgroup>
                                     <col span="1" style="width: 6%;">
-                                    <col span="1" style="width: 26%;">
+                                    <col span="1" style="width: 26%; max-width: 26%;">
                                     <col span="1" style="width: 10%;" class="hiddenMobile">
                                     <col span="1" style="width: 10%;" class="hiddenMobile">
                                     <col span="1" style="width: 12%;" class="hiddenMobile">
@@ -66,7 +66,7 @@
                                         <td>{{ task.id }}</td>
                                     {% endif %}
                                     
-                                    <td class="no-wpap"><b><a href="{% url "projects:get_task_page" task.id %}" class="white-link">{{ task.name }}</a></b></td>
+                                    <td class="no-wpap"><b><a href="{% url "projects:get_task_page" task.id %}" class="white-link no-wpap" tabindex="1">{{ task.name }}</a></b></td>
                                     <td class="hiddenMobile no-wpap">{{ task.project }}</td>
                                     <td class="hiddenMobile no-wpap">{{ task.task_status }}</td>
                                     <td class="hiddenMobile no-wpap">{{ task.created_at|format_date }}</td>

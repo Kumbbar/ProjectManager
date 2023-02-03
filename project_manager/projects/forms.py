@@ -3,7 +3,7 @@ from django import forms
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
-from .models import Task, TaskStatus, TaskStatusConsts
+from .models import Task, TaskStatus, TaskStatusConsts, TaskFileStorage
 
 
 class TaskFormUser(ModelForm):
@@ -51,6 +51,26 @@ class TaskFormDirector(TaskFormUser):
             }
         )
     )
+    
     class Meta:
         model = Task
         fields = ['name', 'description', 'percentage_of_completion', 'task_status', 'completion_date']
+
+
+class TaskFileForm(forms.ModelForm):
+    file = forms.FileField(
+        label='Новый',
+        widget=forms.FileInput(attrs={'class': 'form-control text', 'placeholder': '23232'})
+    )
+    task = forms.ModelChoiceField(
+    label='Задача',
+    widget=forms.HiddenInput(),
+    queryset=None
+    )
+
+    filename = None
+
+    class Meta:
+        model = TaskFileStorage
+        fields = ('file', 'task')
+

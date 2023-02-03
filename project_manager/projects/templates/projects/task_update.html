@@ -40,7 +40,22 @@
                             </table>
                             <button name="submit" class="form-control">Сохранить</button>
                         </form>
-                        <a href="{% url "projects:get_task_page" task.id %}"><button name="" class="form-control">Отмена</button></a>
+                        <a href="{% url "projects:get_task_page" task.id %}"><button name="" class="form-control close-btn">Отмена</button></a>
+
+                        {% for file_form in file_forms %}
+                        <form action="#" method="post">
+                            {% csrf_token %}
+                            <table border="1" style="width: 100%;">
+                                <tr>
+                                    <td><span class="file-text">Текущий:</span></td>
+                                    <td><span class="file-text">{{ file_form.filename }}</span></td>
+                                </tr>
+                                {{ file_form }}
+                                
+                            </table>
+                            <button name="submit" class="form-control save-file-btn">Сохранить</button>
+                        </form>
+                        {% endfor %}
                     </div>
             </div>
         </div>

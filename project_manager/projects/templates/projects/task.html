@@ -37,7 +37,12 @@
                         <h3 class="tasks-title">{{ task.name }}</h3>
                         
                         <h3 class="task-description">{{ task.description | convert_markdown | safe }}</h3>
-
+                        {% if files %}
+                            <h3 class="files-title">Файлы:</h3>
+                        {% endif %}
+                        {% for file in files %}
+                            <a class="file-link" href="{{ file.get_absolute_url }}" target="_blank" tabindex="1">{{ file.get_filename }}</a>
+                        {% endfor %}
                         {% for event in events %}
                             <table border="1" style="width: 100%;" class="event">
                                 <tr>
@@ -45,15 +50,13 @@
                                         <h5 class="event-name">{{ event.name }}</h5> 
                                     </td>
                                 </tr>
-                                
-                                    {% if event.description %}
-                                    <tr>
-                                        <td>
-                                            <h5 class="event-description">{{ event.description }}</h5> 
-                                        </td>
-                                    </tr>
-                                    {% endif %}
-                                    
+                                {% if event.description %}
+                                <tr>
+                                    <td>
+                                        <h5 class="event-description">{{ event.description }}</h5> 
+                                    </td>
+                                </tr>
+                                {% endif %}
                             </table>
                         {% endfor %}
                     </div>

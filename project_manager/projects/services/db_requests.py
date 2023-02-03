@@ -17,9 +17,12 @@ class TaskService:
         except Task.DoesNotExist:
             raise Http404('Такой задачи не существует')
     
-    
     @classmethod
     def get_user_tasks(cls, user: User) -> QuerySet:
         return Task.objects.filter(user=user).order_by('-updated_at')
+    
+    @classmethod
+    def create_empty_task_files(cls):
+        pass
 
     

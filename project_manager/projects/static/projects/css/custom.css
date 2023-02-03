@@ -122,6 +122,7 @@ b{
     width: 100%;
     color:#e8e8e8;
     border:2px solid white;
+    table-layout: fixed;
 }
 th, td{
     padding: 0.4%;
@@ -238,4 +239,37 @@ li p{
 }
 p{
     color: white;
+}
+.files-title{
+    text-align: left;
+}
+.file-link{
+    text-align: left;
+    margin: 0.5% 0.8% 0.5% 0;
+    color: white;
+}
+.file-link:hover{
+    color: white;
+}
+.file-link:active{
+    color:white;
+}
+a[tabindex]:focus{
+    outline: none;
+    color:white;
+}
+.close-btn{
+    margin-bottom: 4% !important;
+}
+.save-file-btn{
+    margin-bottom: 3% !important;
+
+}
+.file-text{
+    color: white;
+    line-height: 1.5;
+    margin-bottom: .5rem;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 400;
 }
