@@ -4,8 +4,7 @@ from django.http import Http404
 
 
 from datetime import datetime
-from projects.models import *
-
+from ..models import Task
 
 
 class TaskService:

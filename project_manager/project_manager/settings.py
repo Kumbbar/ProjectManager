@@ -148,3 +148,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'projects:get_tasks_page'
+
+
+if DEBUG:
+    AUTH_PASSWORD_VALIDATORS = []
