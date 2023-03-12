@@ -18,7 +18,7 @@ class Command(BaseCommand):
             if self.is_status_exists(orm_model, status):
                 self.stdout.write(f'Status {status} already exists')
                 continue
-            new_status = TaskStatus(name=status)
+            new_status = orm_model(name=status)
             new_status.save()
             self.stdout.write(f'Status {status} created')
 
