@@ -1,8 +1,6 @@
 from django.urls import path
-from django.conf.urls.static import static
 
 from . import views
-from project_manager import settings
 
 app_name = 'projects'
 
@@ -13,7 +11,7 @@ urlpatterns = [
     # path('tasks/event/update/<int:task_id>', views.UpdateTask.as_view(), name='update_task'),
     # path('tasks/file/update/<int:file_id>', views.UpdateTaskFile.as_view(), name='update_task_file'),
     # path('tasks/create/<int:task_id>', views.UpdateTask.as_view(), name='update_task'),
-    # path('tasks/create_event/<int:task_id>', views.UpdateTask.as_view(), name='update_task'),
+    path('tasks/create_event/<int:task_id>', views.UpdateTask.as_view(), name='create_even'),
 
 
 ]

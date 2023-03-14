@@ -1,9 +1,8 @@
 from django.forms import ModelForm
 from django import forms
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
-from .models import Task, TaskStatus, TaskStatusConsts, TaskFileStorage
+from .models import Task, TaskStatus, TaskStatusConsts, TaskFileStorage, TaskEvent
 
 
 class TaskFormUser(ModelForm):
@@ -27,7 +26,6 @@ class TaskFormUser(ModelForm):
             'description': 'Описание'
         }
         fields = ['description', 'percentage_of_completion', 'task_status']
-    
 
 
 class TaskFormDirector(TaskFormUser):
@@ -55,6 +53,21 @@ class TaskFormDirector(TaskFormUser):
     class Meta:
         model = Task
         fields = ['name', 'description', 'percentage_of_completion', 'task_status', 'completion_date']
+
+
+class TaskEventForm(forms.ModelForm):
+    name = forms.CharField(
+        label='Название',
+        max_length=200,
+        widget=forms.TextInput(attrs={'class': 'form-control text'}),
+    )
+    description = models.TextField(
+        max_length=1500
+    )
+
+    class Meta:
+        model = TaskEvent
+        fields = ('name', 'description')
 
 
 class TaskFileForm(forms.ModelForm):
