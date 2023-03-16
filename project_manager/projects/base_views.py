@@ -13,24 +13,27 @@ class TaskFormView(View):
         self.task = None
         self.form = None
 
-    @staticmethod
-    def get_task_and_form(request: WSGIRequest, task_id: int):
+    def get_task_and_form(self, task_id: int):
         task, form = None, None
         raise NotImplementedError
 
+    def fill_form(self, form):
+        raise NotImplementedError
+
     def get(self, request: WSGIRequest, task_id: int):
-        self.task, self.form = self.get_task_and_form(request, task_id)
+        self.task, self.form = self.get_task_and_form(task_id)
         self.context.update({'task': self.task, 'form': self.form})
-        self.view_process()
+        self.view_postprocess()
         return render(request, self.form_template, self.context)
 
     def post(self, request: WSGIRequest, task_id: int):
-        task, form = self.get_task_and_form(request, task_id)
-        if form.is_valid():
-            form.save()
+        self.task, self.form = self.get_task_and_form(task_id)
+        self.context.update({'task': self.task, 'form': self.form})
+        if self.form.is_valid():
+            self.form.save()
             return redirect(self.redirect_view, task_id)
-        self.view_process()
+        self.view_postprocess()
         return render(request, self.form_template, self.context)
 
-    def view_process(self):
+    def view_postprocess(self):
         pass

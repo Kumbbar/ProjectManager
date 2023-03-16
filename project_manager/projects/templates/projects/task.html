@@ -8,7 +8,7 @@
 
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Задачи</title>
+    <title>Задача - {{ task.name }}</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
     <meta name="description" content="">
@@ -27,7 +27,7 @@
       <li><a href="">Приглашения</a></li>
       <li><a href="">Профиль</a></li>
       <li><a href="{% url "projects:update_task" task.id %}">Редактировать</a></li>
-      <li><a href="{% url "projects:update_task" task.id %}">Создать событие</a></li>
+      <li><a href="{% url "projects:create_event" task.id %}">Создать событие</a></li>
     {% endblock %}
     {% block content %}
     <div class="about_area">
@@ -53,7 +53,7 @@
                                 {% if event.description %}
                                 <tr>
                                     <td>
-                                        <h5 class="event-description">{{ event.description }}</h5> 
+                                        <h5 class="event-description">{{ event.description | convert_markdown | safe }}</h5>
                                     </td>
                                 </tr>
                                 {% endif %}

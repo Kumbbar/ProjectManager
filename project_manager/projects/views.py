@@ -34,39 +34,38 @@ class UpdateTask(TaskFormView):
     form_template = 'projects/task_update.html'
     redirect_view = 'projects:get_task_page'
 
-    @staticmethod
-    def get_task_and_form(request: WSGIRequest, task_id: int):
-        task = TaskService.get_user_task_by_id(request.user, task_id)
-        form = FormTaskService.get_task_form_by_user_position(task, request.user)(instance=task)
-        if request.method == 'POST':
-            form = FormTaskService.get_task_form_by_user_position(task, request.user)(data=request.POST,instance=task)
-        return task, form
+    def fill_form(self, form):
+        if self.request.method == 'POST':
+            form = form(data=self.request.POST, instance=self.task)
+        else:
+            form = form(instance=self.task)
+        self.form = form
 
-    def view_process(self):
+    def get_task_and_form(self, task_id: int):
+        self.task = TaskService.get_user_task_by_id(self.request.user, task_id)
+        self.form = FormTaskService.get_task_form_by_user_position(self.task, self.request.user)
+        self.fill_form(self.form)
+        return self.task, self.form
+
+    def view_postprocess(self):
         file_forms = FormTaskService.get_file_forms_for_task(self.task)
         self.context.update({'file_forms': file_forms})
 
 
 @method_decorator(login_required, name='dispatch')
 class CreateTaskEvent(TaskFormView):
-    @staticmethod
-    def get_task_and_form(request: WSGIRequest, task_id: int):
-        task = TaskService.get_user_task_by_id(request.user, task_id)
-        form = TaskEventForm()
-        form.task = task
-        return task, form
+    form_template = 'projects/task_event_create.html'
+    redirect_view = 'projects:get_task_page'
 
-    def get(self, request: WSGIRequest, task_id: int):
-        task, form = self.get_task_and_form(request, task_id)
-        return render(request, 'projects/task_update.html', {'task': task, 'form': form})
+    def fill_form(self, form):
+        self.form = form(data=self.request.POST)
 
-    def post(self, request: WSGIRequest, task_id: int):
-        task, form = self.get_task_and_form(request, task_id)
-        if form.is_valid():
-            form.save()
-            return redirect('projects:get_task_page', task_id)
-        file_forms = FormTaskService.get_file_forms_for_task(task)
-        return render(request, 'projects/task_update.html', {'task': task, 'form': form, 'file_forms': file_forms})
+    def get_task_and_form(self, task_id: int):
+        self.task = TaskService.get_user_task_by_id(self.request.user, task_id)
+        self.form = TaskEventForm
+        self.fill_form(self.form)
+        self.form.instance.task_id = self.task.pk
+        return self.task, self.form
 
 
 @method_decorator(login_required, name='dispatch')
