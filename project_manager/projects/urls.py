@@ -1,7 +1,7 @@
-from django.urls import path
+from django.urls import path, include
 
 from . import views
-
+from .api import urls as api_urls
 app_name = 'projects'
 
 urlpatterns = [
@@ -11,9 +11,11 @@ urlpatterns = [
     # path('tasks/create', views.UpdateTask.as_view(), name='update_task'),
 
     path('tasks/<int:task_id>/events/create', views.CreateTaskEvent.as_view(), name='create_event'),
-    # path('tasks/<int:task_id>/event/update/<int:task_id>', views.UpdateTask.as_view(), name='update_task'),
+    path('tasks/<int:task_id>/events/update/<int:event_id>', views.UpdateTaskEvent.as_view(), name='update_event'),
 
     # path('tasks/<int:file_id>/file/update', views.UpdateTaskFile.as_view(), name='update_task_file'),
+
+    path('api/', include(api_urls)),
 
 ]
 

@@ -172,6 +172,10 @@ html, body {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.no-wrap-break{
+    white-space: break-spaces !important;
+    word-break: break-all;
+}
 .white-link{
     color: white;
 }
@@ -273,3 +277,7 @@ a[tabindex]:focus{
     font-size: 14px;
     font-weight: 400;
 }
+pre{
+    white-space: break-spaces;
+}
+

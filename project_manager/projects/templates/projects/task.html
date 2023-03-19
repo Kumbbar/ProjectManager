@@ -34,9 +34,9 @@
         <div class="container">
             <div class="row align-items-center">
                     <div class="about_thumb">
-                        <h3 class="tasks-title">{{ task.name }}</h3>
+                        <h3 class="tasks-title no-wrap-break">{{ task.name }}</h3>
                         
-                        <h3 class="task-description">{{ task.description | convert_markdown | safe }}</h3>
+                        <h3 class="task-description no-wrap-break">{{ task.description | convert_markdown | safe }}</h3>
                         {% if files %}
                             <h3 class="files-title">Файлы:</h3>
                         {% endif %}
@@ -47,13 +47,17 @@
                             <table border="1" style="width: 100%;" class="event">
                                 <tr>
                                     <td>
-                                        <h5 class="event-name">{{ event.name }}</h5> 
+                                        <h5 class="event-name no-wrap-break">{{ event.name }}</h5>
                                     </td>
                                 </tr>
                                 {% if event.description %}
                                 <tr>
                                     <td>
-                                        <h5 class="event-description">{{ event.description | convert_markdown | safe }}</h5>
+                                        <h5 class="event-description no-wrap-break">{{ event.description | convert_markdown | safe }}</h5>
+                                        <p></p>
+                                        <h5 class="event-description no-wrap-break text-right">Создано: {{ event.created_at | format_date }}<br>Обновлено: {{ event.updated_at|format_date }}</h5>
+                                        <p></p>
+                                        <h5 class="event-description no-wrap-break text-right"><a href="{% url "projects:update_event" task.id event.id %}">Редактировать</a></h5>
                                     </td>
                                 </tr>
                                 {% endif %}

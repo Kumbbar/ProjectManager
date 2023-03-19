@@ -108,7 +108,7 @@ class Task(BaseDescription):
     closed_at = models.DateTimeField(null=True, blank=True, editable=True)
     percentage_of_completion =  models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
     task_status = models.ForeignKey(TaskStatus, on_delete=models.SET_NULL, null=True, related_name='task_status')
-    completion_date = models.DateField(null=True, blank=True) # task deadline
+    completion_date = models.DateField(null=True, blank=True)  # task deadline
 
     class Meta:
         db_table = 'tasks'
@@ -127,7 +127,7 @@ class Task(BaseDescription):
         return False
     
     def get_task_events(self) -> QuerySet:
-        return TaskEvent.objects.filter(task=self)
+        return TaskEvent.objects.filter(task=self).order_by('-created_at')
     
     def get_task_files(self) -> QuerySet:
         return TaskFileStorage.objects.filter(task=self)
