@@ -26,6 +26,7 @@
       <li><a href="">Проекты</a></li>
       <li><a href="">Приглашения</a></li>
       <li><a href="">Профиль</a></li>
+      <li><a href="{% url "projects:create_task_file" task.id %}">Добавить файл</a></li>
     {% endblock %}
     {% block content %}
     <div class="about_area">

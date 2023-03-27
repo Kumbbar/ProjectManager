@@ -72,18 +72,11 @@ class TaskEventForm(forms.ModelForm):
 
 class TaskFileForm(forms.ModelForm):
     file = forms.FileField(
-        label='Новый',
-        widget=forms.FileInput(attrs={'class': 'form-control text', 'placeholder': '23232'})
+        label='Файл',
+        widget=forms.FileInput(attrs={'class': 'form-control text', 'placeholder': ''})
     )
-    task = forms.ModelChoiceField(
-    label='Задача',
-    widget=forms.HiddenInput(),
-    queryset=None
-    )
-
-    filename = None
 
     class Meta:
         model = TaskFileStorage
-        fields = ('file', 'task')
+        fields = ('file',)
 

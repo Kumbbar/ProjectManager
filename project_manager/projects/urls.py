@@ -13,7 +13,7 @@ urlpatterns = [
     path('tasks/<int:task_id>/events/create', views.CreateTaskEvent.as_view(), name='create_event'),
     path('tasks/<int:task_id>/events/update/<int:event_id>', views.UpdateTaskEvent.as_view(), name='update_event'),
 
-    # path('tasks/<int:file_id>/file/update', views.UpdateTaskFile.as_view(), name='update_task_file'),
+    path('tasks/<int:task_id>/files/create', views.CreateTaskFile.as_view(), name='create_task_file'),
 
     path('api/', include(api_urls)),
 

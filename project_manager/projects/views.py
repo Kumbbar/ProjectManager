@@ -31,19 +31,18 @@ def get_task_page(request: WSGIRequest, task_id:int):
 
 @method_decorator(login_required, name='dispatch')
 class UpdateTask(TaskFormView):
-    form_template = 'projects/task_form.html'
+    form_template = 'projects/task_update.html'
     redirect_view = 'projects:get_task_page'
 
-    def fill_form(self, form):
+    def fill_form(self):
         if self.request.method == 'POST':
-            form = form(data=self.request.POST, instance=self.task)
+            self.form = self.form(data=self.request.POST, instance=self.task)
         else:
-            form = form(instance=self.task)
-        self.form = form
+            self.form = self.form(instance=self.task)
 
     def get_form(self, task_id: int):
         self.form = FormTaskService.get_task_form_by_user_position(self.task, self.request.user)
-        self.fill_form(self.form)
+        self.fill_form()
         return self.form
 
     def view_postprocess(self):
@@ -56,13 +55,12 @@ class CreateTaskEvent(TaskFormView):
     form_template = 'projects/task_event_create.html'
     redirect_view = 'projects:get_task_page'
 
-    def fill_form(self, form):
-        self.form = form(data=self.request.POST)
-        return self.form
+    def fill_form(self):
+        self.form = self.form(data=self.request.POST)
 
     def get_form(self, task_id: int):
         self.form = TaskEventForm
-        self.fill_form(self.form)
+        self.fill_form()
         self.form.instance.task_id = self.task.pk
         return self.form
 
@@ -72,29 +70,34 @@ class UpdateTaskEvent(TaskFormView):
     form_template = 'projects/task_event_update.html'
     redirect_view = 'projects:get_task_page'
 
-    def fill_form(self, form):
+    def fill_form(self):
         event = TaskEventService.get_user_task_event_by_id(self.request.user, self.kwargs['event_id'])
         self.context['event'] = event
 
         if self.request.method == 'POST':
-            form = form(data=self.request.POST, instance=event)
+            self.form = self.form(data=self.request.POST, instance=event)
         else:
-            form = form(instance=event)
-        self.form = form
+            self.form = self.form(instance=event)
 
     def get_form(self, task_id: int):
         self.form = TaskEventForm
-        self.fill_form(self.form)
+        self.fill_form()
         return self.form
 
 
-# @method_decorator(login_required, name='dispatch')
-# class UpdateTaskFile(View):
-#     def post(self, request: WSGIRequest, task_id: int):
-#         form = TaskFileForm(data=request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('projects:get_task_page', task_id)
-#         file_forms = get_file_forms_for_task(task)
-#         return render(request, 'projects/task_update.html', {'task': task, 'form': form, 'file_forms': file_forms})
+@method_decorator(login_required, name='dispatch')
+class CreateTaskFile(TaskFormView):
+    form_template = 'projects/add_file_form.html'
+    redirect_view = 'projects:get_task_page'
 
+    def view_postprocess(self):
+        pass
+
+    def fill_form(self):
+        self.form = self.form(self.request.POST, self.request.FILES)
+
+    def get_form(self, task_id: int):
+        self.form = TaskFileForm
+        self.fill_form()
+        self.form.instance.task_id = self.task.pk
+        return self.form

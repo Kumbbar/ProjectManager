@@ -8,6 +8,7 @@ from .services.db_requests import TaskService
 class TaskFormView(View):
     form_template: str = None
     redirect_view: str = None
+    custom_redirect: bool = False
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -19,8 +20,8 @@ class TaskFormView(View):
     def get_form(self, task_id: int):
         raise NotImplementedError
 
-    def fill_form(self, form):
-        raise NotImplementedError
+    def fill_form(self):
+        pass
 
     def get(self, request: WSGIRequest, task_id: int, **kwargs):
         self.kwargs = kwargs
@@ -35,8 +36,14 @@ class TaskFormView(View):
 
         if self.form.is_valid():
             self.form.save()
+
+            self.view_postprocess()
+
+            if self.custom_redirect:
+                return self.redirect_view
             return redirect(self.redirect_view, task_id)
         self.view_postprocess()
+        print(self.form.errors)
         return render(request, self.form_template, self.context)
 
     def view_preprocess(self, task_id):
