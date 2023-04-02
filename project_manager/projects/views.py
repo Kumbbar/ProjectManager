@@ -45,10 +45,6 @@ class UpdateTask(TaskFormView):
         self.fill_form()
         return self.form
 
-    def view_postprocess(self):
-        file_forms = FormTaskService.get_file_forms_for_task(self.task)
-        self.context.update({'file_forms': file_forms})
-
 
 @method_decorator(login_required, name='dispatch')
 class CreateTaskEvent(TaskFormView):
