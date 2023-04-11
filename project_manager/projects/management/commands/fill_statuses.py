@@ -14,7 +14,7 @@ class Command(BaseCommand):
         return True if orm_model.objects.filter(name=status).first() else False
 
     def create_statuses_by_consts_model(self, status_consts, orm_model):
-        for status in [a for a in dir(status_consts) if not a.startswith('__')]:
+        for status in [getattr(status_consts, attr) for attr in dir(status_consts) if not attr.startswith('__')]:
             if self.is_status_exists(orm_model, status):
                 self.stdout.write(f'Status {status} already exists')
                 continue

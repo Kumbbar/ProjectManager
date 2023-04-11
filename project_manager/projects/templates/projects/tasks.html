@@ -32,8 +32,15 @@
         <div class="container">
             <div class="row align-items-center">
                     <div class="about_thumb">
+                        <form method="get" class="SearchTask">
+                          <table border="1" style="width: 100%;">
+                            {{ task_filter.form }}
+                          </table>
+                        <button type="submit" class="form-control">Найти</button>
+                        </form>
                         <table class="tasksTable">
-                            {% if tasks|length > 0 %}
+
+                            {% if task_filter.qs|length > 0 %}
                                 <colgroup>
                                     <col span="1" style="width: 6%;">
                                     <col span="1" style="width: 26%; max-width: 26%;">
@@ -56,9 +63,9 @@
                                     
                                 </tr>
                             {% else %}
-                            <h3 class="tasks-title">У вас не задач</h3>
+                            <h3 class="tasks-title">Нет задач</h3>
                             {% endif %}
-                            {% for task in tasks %}
+                            {% for task in task_filter.qs %}
                                 <tr>
                                     {% if task.is_expired %}
                                         <td style="background-color: rgb(153, 40, 40);">{{ task.id }}</td>

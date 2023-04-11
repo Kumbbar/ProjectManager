@@ -11,7 +11,6 @@ from .validators import check_file_size
 from project_manager.settings import MEDIA_URL
 
 
-
 # CONSTANTS
 
 @dataclass
@@ -22,6 +21,7 @@ class TaskStatusConsts:
     CLOSED: str = "Закрыта"
     PENDING: str = "Ожидает"
     REJECTED: str = "Отклонена"
+
 
 @dataclass
 class ProjectStatusConsts:
@@ -95,7 +95,7 @@ class ProjectDocumentation(BaseDescription):
     project = models.OneToOneField(Project, on_delete=models.CASCADE)
 
 
-class DocumenationNote(BaseDescription):
+class DocumentationNote(BaseDescription):
     documentation = models.ForeignKey(ProjectDocumentation, on_delete=models.CASCADE)
 
 
@@ -106,14 +106,14 @@ class Task(BaseDescription):
     created_at = models.DateTimeField(auto_now_add=True, editable=True)
     updated_at = models.DateTimeField(auto_now=True)
     closed_at = models.DateTimeField(null=True, blank=True, editable=True)
-    percentage_of_completion =  models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
+    percentage_of_completion = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
     task_status = models.ForeignKey(TaskStatus, on_delete=models.SET_NULL, null=True, related_name='task_status')
     completion_date = models.DateField(null=True, blank=True)  # task deadline
 
     class Meta:
         db_table = 'tasks'
 
-    def close_task(self, datetime : datetime) -> None:
+    def close_task(self) -> None:
         self.closed_at = datetime.now()
         self.task_status = TaskStatus.objects.get(name=TaskStatusConsts.CLOSED)
         self.percentage_of_completion = 100
@@ -144,7 +144,7 @@ class TaskEvent(BaseDescription):
 
 # FILE MODELS
 class ProjectFileStorage(BaseFileStorage):
-    path ='projects/%Y/%m/%d/'
+    path = 'projects/%Y/%m/%d/'
     file = models.FileField(upload_to=path, **BaseFileStorage.base_params)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=False)
 
@@ -170,10 +170,10 @@ class TaskEventFileStorage(BaseFileStorage):
         db_table = 'task_event_files' 
 
 
-class DocumenationNoteFileStorage(BaseFileStorage):
+class DocumentationNoteFileStorage(BaseFileStorage):
     path = 'documentation_notes/%Y/%m/%d/'
     file = models.FileField(upload_to=path, **BaseFileStorage.base_params)
-    documenation_note = models.ForeignKey(DocumenationNote, on_delete=models.CASCADE, null=False)
+    documentation_note = models.ForeignKey(DocumentationNote, on_delete=models.CASCADE, null=False)
 
     class Meta:
         db_table = 'documentation_files' 

@@ -3,12 +3,13 @@ from django.contrib import admin
 from .models import Task, TaskEvent, TaskStatus, ProjectStatus, Project, TaskFileStorage
 
 
-
 class TaskAdmin(admin.ModelAdmin):
-     list_display = ['name', 'user', 'project', 'created_at', 'updated_at', 'percentage_of_completion', 'task_status']
+    list_display = ['name', 'user', 'project', 'created_at', 'updated_at', 'percentage_of_completion', 'task_status']
+
 
 class TaskEventAdmin(admin.ModelAdmin):
-     list_display = ['name', 'task', 'created_at', 'updated_at']
+    list_display = ['name', 'task', 'created_at', 'updated_at']
+
 
 class ProjectAdmin(admin.ModelAdmin):
     list_display = ['name', 'created_at', 'director', 'project_status']

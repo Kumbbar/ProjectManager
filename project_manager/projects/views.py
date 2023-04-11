@@ -2,23 +2,24 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.core.handlers.wsgi import WSGIRequest
-from django.views import View
 
 from .base_views import TaskFormView
 from .services.db_requests import TaskService, TaskEventService
 from .services.forms import FormTaskService
 from .filters import *
+from .data_filters import TaskFilter
 from .forms import TaskFileForm, TaskEventForm
 
 
 @login_required
 def get_tasks_page(request: WSGIRequest):
     tasks = TaskService.get_user_tasks(request.user)
-    return render(request, 'projects/tasks.html', {'tasks': tasks})
+    task_filter = TaskFilter(request.GET, queryset=tasks)
+    return render(request, 'projects/tasks.html', {'task_filter': task_filter})
 
 
 @login_required
-def get_task_page(request: WSGIRequest, task_id:int):
+def get_task_page(request: WSGIRequest, task_id: int):
     task = TaskService.get_user_task_by_id(request.user, task_id)
     events = task.get_task_events()
     files = task.get_task_files()

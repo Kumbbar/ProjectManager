@@ -280,4 +280,6 @@ a[tabindex]:focus{
 pre{
     white-space: break-spaces;
 }
-
+.SearchTask{
+    margin-bottom: 3%;
+}

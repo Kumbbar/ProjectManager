@@ -42,7 +42,7 @@ class TaskFormDirector(TaskFormUser):
     completion_date = forms.DateField(
         label='Срок завершения', 
         widget=forms.DateInput(
-            format=('%Y-%m-%d'),
+            format='%Y-%m-%d',
             attrs={
                 'class': 'form-control text',
                 'type': 'date'
@@ -79,4 +79,3 @@ class TaskFileForm(forms.ModelForm):
     class Meta:
         model = TaskFileStorage
         fields = ('file',)
-
