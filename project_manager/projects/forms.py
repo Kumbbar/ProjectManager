@@ -73,7 +73,11 @@ class TaskEventForm(forms.ModelForm):
 class TaskFileForm(forms.ModelForm):
     file = forms.FileField(
         label='Файл',
-        widget=forms.FileInput(attrs={'class': 'form-control text', 'placeholder': ''})
+        widget=forms.FileInput(
+            attrs={
+                'class': 'form-control text',
+            }
+        )
     )
 
     class Meta:

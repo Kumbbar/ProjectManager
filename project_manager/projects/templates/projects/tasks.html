@@ -24,7 +24,9 @@
     {% block header %}
       <li><a class="active" href=""><b>Задачи</b></a></li>
       <li><a href="">Проекты</a></li>
-      <li><a href="">Приглашения</a></li>
+      {% if request.user.is_staff %}
+        <li><a href="admin/">Управление</a></li>
+      {% endif %}
       <li><a href="">Профиль</a></li>
     {% endblock %}
     {% block content %}

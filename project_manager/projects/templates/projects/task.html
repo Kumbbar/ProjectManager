@@ -24,10 +24,13 @@
     {% block header %}
       <li><a class="active" href="{% url "projects:get_tasks_page" %}"><b>Задачи</b></a></li>
       <li><a href="">Проекты</a></li>
-      <li><a href="">Приглашения</a></li>
+      {% if request.user.is_staff %}
+        <li><a href="admin/">Управление</a></li>
+      {% endif %}
       <li><a href="">Профиль</a></li>
       <li><a href="{% url "projects:update_task" task.id %}">Редактировать</a></li>
       <li><a href="{% url "projects:create_event" task.id %}">Создать событие</a></li>
+      <li><a href="{% url "projects:create_task_file" task.id %}">Добавить файл</a></li>
     {% endblock %}
     {% block content %}
     <div class="about_area">
@@ -35,8 +38,11 @@
             <div class="row align-items-center">
                     <div class="about_thumb">
                         <h3 class="tasks-title no-wrap-break">{{ task.name }}</h3>
-                        
-                        <h3 class="task-description no-wrap-break">{{ task.description | convert_markdown | safe }}</h3>
+                        {% if task.description %}
+                          <h3 class="task-description no-wrap-break">{{ task.description | convert_markdown | safe }}</h3>
+                        {% else %}
+                          <h3 class="tasks-title">Нет описания</h3>
+                        {% endif %}
                         {% if files %}
                             <h3 class="files-title">Файлы:</h3>
                         {% endif %}

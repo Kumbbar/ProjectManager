@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="{% static 'projects/css/slicknav.css' %}">
   <link rel="stylesheet" href="{% static 'projects/css/style.css' %}">
   <link rel="stylesheet" href="{% static 'projects/css/custom.css' %}">
+  <link rel="icon" href="{% static '/admin/img/logo.svg' %}">
 
   {% block custom-head %}
 
@@ -53,7 +54,7 @@
                                 <div class="text-right">
                                     <ul class="userPanel">
                                         <li class="panelEl"><span class="username">{{ request.user.username}}</span></li>
-                                        <li class="panelEl"><span class="username"><a href="{% url "users:logout" %}" class="white-link style="font-size: 15px;">Выход</a></span></li>
+                                        <li class="panelEl"><span class="username"><a href="{% url "users:logout" %}" class="white-link" style="font-size: 15px;">Выход</a></span></li>
                                     </ul>
                                 </div>
                             </div>

@@ -33,7 +33,7 @@
             <div class="row align-items-center">
                 <div class="about_thumb">
                     <h3 class="tasks-title">{{ task.name }} {{ event.name }}</h3>
-                    <form action="{% url "projects:create_task_file" task.id %}" method="post">
+                    <form action="{% url "projects:create_task_file" task.id %}" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <table border="1" style="width: 100%;">
                             {{ form }}

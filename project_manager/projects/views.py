@@ -92,6 +92,7 @@ class CreateTaskFile(TaskFormView):
 
     def fill_form(self):
         self.form = self.form(self.request.POST, self.request.FILES)
+        return self.form
 
     def get_form(self, task_id: int):
         self.form = TaskFileForm

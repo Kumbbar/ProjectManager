@@ -13,7 +13,8 @@ class TaskFilter(FilterSet):
                 'placeholder': 'Название задачи',
                 'class': 'form-control text'
             }
-        )
+        ),
+        lookup_expr='icontains'
     )
     task_status = ModelChoiceFilter(
         queryset=TaskStatus.objects.all(),
