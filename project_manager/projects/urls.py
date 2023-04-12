@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.urls import path, include
 
 from . import views
@@ -18,4 +19,6 @@ urlpatterns = [
     path('api/', include(api_urls)),
 
 ]
+
+admin.site.index_title = "Управление задачами"
 

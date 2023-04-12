@@ -31,8 +31,8 @@ class ProjectStatusConsts:
 
 # BASE MODELS
 class BaseDescription(models.Model):
-    name = models.CharField(max_length=200, null=False)
-    description = models.TextField(max_length=1000, null=True, blank=True)
+    name = models.CharField(max_length=200, null=False, verbose_name='Название')
+    description = models.TextField(max_length=1000, null=True, blank=True, verbose_name='Описание')
 
     class Meta:
         abstract = True
@@ -67,51 +67,70 @@ class BaseFileStorage(models.Model):
 class TaskStatus(BaseDescription):
     class Meta:
         db_table = 'task_statuses'
-        verbose_name_plural = 'Task_statuses'
+        verbose_name = 'Статус задачи'
+        verbose_name_plural = 'Статусы задач'
 
 
 class ProjectStatus(BaseDescription):
     class Meta:
         db_table = 'project_statuses'
-        verbose_name_plural = 'Project_statuses'
+        verbose_name = 'Статус проекта'
+        verbose_name_plural = 'Статусы проектов'
 
 
 class Project(BaseDescription):
-    name = models.CharField(max_length=200, null=False, unique=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    director = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='director')
-    users = models.ManyToManyField(User)
-    project_status = models.ForeignKey(ProjectStatus, on_delete=models.SET_NULL, null=True)
+    name = models.CharField(max_length=200, null=False, unique=True, verbose_name='Название')
+    created_at = models.DateTimeField(auto_now_add=True,  verbose_name='Создано')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлено')
+    director = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='director',
+        verbose_name='Руководитель')
+    users = models.ManyToManyField(User, verbose_name='Пользователи')
+    project_status = models.ForeignKey(ProjectStatus, on_delete=models.SET_NULL, null=True, verbose_name='Статус проекта')
 
     class Meta:
         db_table = 'projects'
+        verbose_name = 'Проект'
+        verbose_name_plural = 'Проекты'
 
     def test(self):
         print(self.name)
 
 
 class ProjectDocumentation(BaseDescription):
-    project = models.OneToOneField(Project, on_delete=models.CASCADE)
+    project = models.OneToOneField(Project, on_delete=models.CASCADE, verbose_name='jopa')
 
 
 class DocumentationNote(BaseDescription):
-    documentation = models.ForeignKey(ProjectDocumentation, on_delete=models.CASCADE)
+    documentation = models.ForeignKey(ProjectDocumentation, on_delete=models.CASCADE, verbose_name='jopa')
 
 
 class Task(BaseDescription):
-    description = models.TextField(max_length=1500, null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=False)
-    created_at = models.DateTimeField(auto_now_add=True, editable=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    closed_at = models.DateTimeField(null=True, blank=True, editable=True)
-    percentage_of_completion = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
-    task_status = models.ForeignKey(TaskStatus, on_delete=models.SET_NULL, null=True, related_name='task_status')
-    completion_date = models.DateField(null=True, blank=True)  # task deadline
+    description = models.TextField(max_length=1500, null=True, blank=True, verbose_name='Описание')
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name='Исполнитель')
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=False, verbose_name='Проект')
+    created_at = models.DateTimeField(auto_now_add=True, editable=True, verbose_name='Создано')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлено')
+    closed_at = models.DateTimeField(null=True, blank=True, editable=True, verbose_name='Завершено')
+    percentage_of_completion = models.IntegerField(
+        default=0,
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+        verbose_name='Процент выполнения'
+    )
+    task_status = models.ForeignKey(
+        TaskStatus,
+        on_delete=models.SET_NULL,
+        null=True, related_name='task_status',
+        verbose_name='Статус')
+    completion_date = models.DateField(null=True, blank=True, verbose_name='Срок выполнения')  # task deadline
 
     class Meta:
         db_table = 'tasks'
+        verbose_name = 'Задача'
+        verbose_name_plural = 'Задачи'
 
     def close_task(self) -> None:
         self.closed_at = datetime.now()
@@ -134,19 +153,21 @@ class Task(BaseDescription):
 
 
 class TaskEvent(BaseDescription):
-    task = models.ForeignKey(Task, on_delete=models.CASCADE, null=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, null=False, verbose_name='Задача')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создано')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлено')
 
     class Meta:
         db_table = 'task_events'
+        verbose_name = 'Событие задачи'
+        verbose_name_plural = 'События задач'
 
 
 # FILE MODELS
 class ProjectFileStorage(BaseFileStorage):
     path = 'projects/%Y/%m/%d/'
-    file = models.FileField(upload_to=path, **BaseFileStorage.base_params)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=False)
+    file = models.FileField(upload_to=path, **BaseFileStorage.base_params, verbose_name='Файл')
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=False, verbose_name='Проект')
 
     class Meta:
         db_table = 'project_files'
@@ -154,8 +175,8 @@ class ProjectFileStorage(BaseFileStorage):
 
 class TaskFileStorage(BaseFileStorage):
     path = 'tasks/%Y/%m/%d/'
-    file = models.FileField(upload_to=path, **BaseFileStorage.base_params)
-    task = models.ForeignKey(Task, on_delete=models.CASCADE, null=False)
+    file = models.FileField(upload_to=path, **BaseFileStorage.base_params, verbose_name='Файл')
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, null=False, verbose_name='Задача')
 
     class Meta:
         db_table = 'task_files'
@@ -163,8 +184,8 @@ class TaskFileStorage(BaseFileStorage):
 
 class TaskEventFileStorage(BaseFileStorage):
     path = 'task_events/%Y/%m/%d/'
-    file = models.FileField(upload_to=path, **BaseFileStorage.base_params)
-    task_event = models.ForeignKey(TaskEvent, on_delete=models.CASCADE, null=False)
+    file = models.FileField(upload_to=path, **BaseFileStorage.base_params, verbose_name='Файл')
+    task_event = models.ForeignKey(TaskEvent, on_delete=models.CASCADE, null=False, verbose_name='Событие задачи')
 
     class Meta:
         db_table = 'task_event_files' 
@@ -172,8 +193,12 @@ class TaskEventFileStorage(BaseFileStorage):
 
 class DocumentationNoteFileStorage(BaseFileStorage):
     path = 'documentation_notes/%Y/%m/%d/'
-    file = models.FileField(upload_to=path, **BaseFileStorage.base_params)
-    documentation_note = models.ForeignKey(DocumentationNote, on_delete=models.CASCADE, null=False)
+    file = models.FileField(upload_to=path, **BaseFileStorage.base_params, verbose_name='Файл')
+    documentation_note = models.ForeignKey(
+        DocumentationNote,
+        on_delete=models.CASCADE,
+        null=False,
+        verbose_name='Запись документации')
 
     class Meta:
         db_table = 'documentation_files' 
