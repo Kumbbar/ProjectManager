@@ -43,7 +43,6 @@ class TaskFormView(View):
                 return self.redirect_view
             return redirect(self.redirect_view, task_id)
         self.view_postprocess()
-        print(self.form.errors)
         return render(request, self.form_template, self.context)
 
     def view_preprocess(self, task_id):
@@ -53,3 +52,20 @@ class TaskFormView(View):
 
     def view_postprocess(self):
         pass
+
+
+class DeleteView(View):
+    redirect_view: str = None
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.kwargs = None
+
+    def delete(self, **kwargs):
+        self.kwargs = kwargs
+        self.delete_object()
+        return redirect('')
+
+    def delete_object(self):
+        raise NotImplementedError
+

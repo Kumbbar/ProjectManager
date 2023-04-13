@@ -29,23 +29,27 @@
       <li><a href="{% url "projects:create_task_file" task.id %}">Добавить файл</a></li>
     {% endblock %}
     {% block content %}
-    <div class="about_area">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="about_thumb">
-                    <h3 class="tasks-title">{{ task.name }}</h3>
-                    <form action="{% url "projects:update_task" task.id %}" method="post">
-                        {% csrf_token %}
-                        <table border="1" style="width: 100%;">
-                            {{ form }}
-                        </table>
-                        <button name="submit" class="form-control">Сохранить</button>
-                    </form>
-                    <a href="{% url "projects:get_task_page" task.id %}"><button name="" class="form-control close-btn">Отмена</button></a>
+        <div class="about_area">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="about_thumb">
+                        <h3 class="tasks-title">{{ task.name }}</h3>
+                        <form action="{% url "projects:update_task" task.id %}" method="post">
+                            {% csrf_token %}
+                            <table border="1" style="width: 100%;">
+                                {{ form }}
+                            </table>
+                            <button name="submit" class="form-control">Сохранить</button>
+                        </form>
+                        <a href="{% url "projects:get_task_page" task.id %}"><button name="" class="form-control close-btn">Отмена</button></a>
+
+                        {% for file in files %}
+                          <a class="file-link" href="{{ file.get_absolute_url }}" target="_blank" tabindex="1">{{ file.get_filename }}</a>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     {% endblock %}d
 
 </body>

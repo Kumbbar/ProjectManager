@@ -4,8 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.core.handlers.wsgi import WSGIRequest
 
-from .base_views import TaskFormView
-from .services.db_requests import TaskService, TaskEventService
+from .base_views import TaskFormView, DeleteView
+from .services.db_requests import TaskService, TaskEventService, TaskFileService
 from .services.forms import FormTaskService
 from .filters import *
 from .data_filters import TaskFilter
@@ -50,6 +50,10 @@ class UpdateTask(TaskFormView):
         self.form = FormTaskService.get_task_form_by_user_position(self.task, self.request.user)
         self.fill_form()
         return self.form
+
+    def view_postprocess(self):
+        self.context['files'] = self.task.get_task_files()
+        print(self.task.get_task_files())
 
 
 @method_decorator(login_required, name='dispatch')
@@ -106,9 +110,15 @@ class CreateTaskFile(TaskFormView):
         self.form = TaskFileForm
         self.fill_form()
         self.form.instance.task_id = self.task.pk
-        if self.check_task_contain_too_many_files():
+        if self.task.is_have_maximum_files():
             self.form.errors['file'] = ErrorList(['Нельзя добавить больше 5 файлов'], )
         return self.form
 
-    def check_task_contain_too_many_files(self):
-        return True if len(self.task.get_task_files()) >= 5 else False
+
+@method_decorator(login_required, name='dispatch')
+class DeleteTaskFile(DeleteView):
+    redirect_view = 'projects:create_task_file'
+
+    def delete_object(self):
+        file = TaskFileService.get_by_id(self.kwargs['file_id'])
+        file.delete()

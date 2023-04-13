@@ -96,9 +96,6 @@ class Project(BaseDescription):
         verbose_name = 'Проект'
         verbose_name_plural = 'Проекты'
 
-    def test(self):
-        print(self.name)
-
 
 class ProjectDocumentation(BaseDescription):
     project = models.OneToOneField(Project, on_delete=models.CASCADE, verbose_name='jopa')
@@ -150,6 +147,9 @@ class Task(BaseDescription):
     
     def get_task_files(self) -> QuerySet:
         return TaskFileStorage.objects.filter(task=self)
+
+    def is_have_maximum_files(self) -> bool:
+        return True if len(self.get_task_files()) >= 5 else False
 
 
 class TaskEvent(BaseDescription):

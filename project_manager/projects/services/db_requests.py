@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.db.models import QuerySet
 from django.http import Http404
 
-from ..models import Task, TaskEvent
+from ..models import Task, TaskEvent, TaskFileStorage
 
 
 class TaskService:
@@ -31,5 +31,11 @@ class TaskEventService:
     @classmethod
     def get_user_tasks(cls, user: User) -> QuerySet:
         return Task.objects.filter(user=user).order_by('-updated_at')
+
+
+class TaskFileService:
+    @classmethod
+    def get_by_id(cls, file_id: int):
+        return TaskFileService.objects.filter(id=file_id)
 
     
