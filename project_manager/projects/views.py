@@ -24,11 +24,15 @@ def get_task_page(request: WSGIRequest, task_id: int):
     task = TaskService.get_user_task_by_id(request.user, task_id)
     events = task.get_task_events()
     files = task.get_task_files()
-    return render(request, 'projects/task.html', {
-        'task': task, 
-        'events': events,
-        'files': files
-        })
+    return render(
+        request,
+        'projects/task.html',
+        {
+            'task': task,
+            'events': events,
+            'files': files
+        }
+    )
 
 
 @method_decorator(login_required, name='dispatch')

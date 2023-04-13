@@ -9,7 +9,6 @@ urlpatterns = [
     path('', views.get_tasks_page, name='get_tasks_page'),
     path('tasks/<int:task_id>', views.get_task_page, name='get_task_page'),
     path('tasks/<int:task_id>/update', views.UpdateTask.as_view(), name='update_task'),
-    # path('tasks/create', views.UpdateTask.as_view(), name='update_task'),
 
     path('tasks/<int:task_id>/events/create', views.CreateTaskEvent.as_view(), name='create_event'),
     path('tasks/<int:task_id>/events/update/<int:event_id>', views.UpdateTaskEvent.as_view(), name='update_event'),
