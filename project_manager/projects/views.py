@@ -103,7 +103,6 @@ class CreateTaskFile(TaskFormView):
         self.fill_form()
         self.form.instance.task_id = self.task.pk
         if self.check_task_contain_too_many_files():
-            print('sadd')
             self.form.errors['file'] = ErrorList(['Нельзя добавить больше 5 файлов'], )
         return self.form
 
