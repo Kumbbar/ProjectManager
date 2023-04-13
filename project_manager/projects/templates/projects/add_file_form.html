@@ -35,6 +35,9 @@
                     <h3 class="tasks-title">{{ task.name }} {{ event.name }}</h3>
                     <form action="{% url "projects:create_task_file" task.id %}" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
+                        {% if success_add %}
+                          <h2>Файл добавлен</h2>
+                        {% endif %}
                         <table border="1" style="width: 100%;">
                             {{ form }}
                         </table>

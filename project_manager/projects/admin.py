@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Task, TaskEvent, TaskStatus, ProjectStatus, Project
+from .models import Task, TaskEvent, TaskStatus, ProjectStatus, Project, TaskFileStorage
 
 
 class TaskAdmin(admin.ModelAdmin):
@@ -22,3 +22,4 @@ admin.site.register(TaskEvent, TaskEventAdmin)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(ProjectStatus)
 admin.site.register(TaskStatus)
+admin.site.register(TaskFileStorage)

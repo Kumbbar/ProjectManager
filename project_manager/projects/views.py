@@ -1,3 +1,4 @@
+from django.forms.utils import ErrorList
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -85,10 +86,13 @@ class UpdateTaskEvent(TaskFormView):
 @method_decorator(login_required, name='dispatch')
 class CreateTaskFile(TaskFormView):
     form_template = 'projects/add_file_form.html'
-    redirect_view = 'projects:get_task_page'
+    redirect_view = 'projects:create_task_file'
+    custom_redirect = True
 
     def view_postprocess(self):
-        pass
+        if self.request.method == 'POST' and not self.form.errors:
+            self.context.update({'success_add': True})
+        self.redirect_view = render(self.request, self.form_template, self.context)
 
     def fill_form(self):
         self.form = self.form(self.request.POST, self.request.FILES)
@@ -98,4 +102,10 @@ class CreateTaskFile(TaskFormView):
         self.form = TaskFileForm
         self.fill_form()
         self.form.instance.task_id = self.task.pk
+        if self.check_task_contain_too_many_files():
+            print('sadd')
+            self.form.errors['file'] = ErrorList(['Нельзя добавить больше 5 файлов'], )
         return self.form
+
+    def check_task_contain_too_many_files(self):
+        return True if len(self.task.get_task_files()) >= 5 else False
