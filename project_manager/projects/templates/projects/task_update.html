@@ -42,15 +42,42 @@
                             <button name="submit" class="form-control">Сохранить</button>
                         </form>
                         <a href="{% url "projects:get_task_page" task.id %}"><button name="" class="form-control close-btn">Отмена</button></a>
-
-                        {% for file in files %}
-                          <a class="file-link" href="{{ file.get_absolute_url }}" target="_blank" tabindex="1">{{ file.get_filename }}</a>
-                        {% endfor %}
+                        {% if files %}
+                            <h3 class="files-title">Файлы:</h3>
+                        {% endif %}
+                        <table class="filesTable">
+                            {% if files|length > 0 %}
+                                <colgroup>
+                                    <col span="1" style="width: 50%; max-width: 50%;">
+                                    <col span="1" style="width: 25%; max-width: 25%;">
+                                    <col span="1" style="width: 25%; max-width: 25%;">
+                                </colgroup>
+                                <tr>
+                                    <th>Название</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            {% else %}
+                              <h3 class="tasks-title">Нет файлов</h3>
+                            {% endif %}
+                            {% for file in files %}
+                                <tr id="{{ file.id }}-tr">
+                                    <td class="no-wpap file-name"><b>{{ file.get_filename }}</b></td>
+                                    <td class="file-name no-wpap"><a class="file-link" href="{{ file.get_absolute_url }}" target="_blank" tabindex="1"><button class="open-file-button">Открыть</button></a></td>
+                                    <td><button class="delete-file-button" id="{{ file.id }}">Удалить</button></td>
+                                </tr>
+                            {% endfor %}
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
-    {% endblock %}d
-
+    {% endblock %}
 </body>
+    {% block scripts %}
+      <script type="text/javascript">
+        var taskId = {{ task.id }};
+      </script>
+      <script src="{% static 'projects/js/deleteFiles.js' %}"></script>
+    {% endblock %}
 </html>

@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from datetime import datetime, date
 
 from .validators import check_file_size
-from project_manager.settings import MEDIA_URL
+from project_manager.settings import MEDIA_URL, MEDIA_ROOT
 
 
 # CONSTANTS
@@ -61,6 +61,10 @@ class BaseFileStorage(models.Model):
 
     def get_absolute_url(self) -> str:
         return f'{MEDIA_URL}{self.file.name}'
+
+    def delete(self, using=None, keep_parents=False):
+        os.remove(MEDIA_ROOT + self.file.name)
+        return super(BaseFileStorage, self).delete(using, keep_parents)
 
 
 # MODELS

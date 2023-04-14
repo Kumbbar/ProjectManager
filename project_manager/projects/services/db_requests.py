@@ -36,6 +36,6 @@ class TaskEventService:
 class TaskFileService:
     @classmethod
     def get_by_id(cls, file_id: int):
-        return TaskFileService.objects.filter(id=file_id)
+        return TaskFileStorage.objects.get(id=file_id)
 
     

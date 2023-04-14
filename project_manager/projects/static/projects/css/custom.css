@@ -117,6 +117,13 @@ b{
     color: white;
     font-weight: bold;
 }
+.filesTable{
+    font-size: 13px;
+    width: 100%;
+    color:#e8e8e8;
+    border:2px solid white;
+    table-layout: fixed;
+}
 .tasksTable{
     font-size: 13px;
     width: 100%;
@@ -282,4 +289,15 @@ pre{
 }
 .SearchTask{
     margin-bottom: 3%;
+}
+.file-name{
+    color: white;
+}
+.delete-file-button{
+    min-height: 100%;
+    min-width: 100%;
+}
+.open-file-button{
+    min-height: 100%;
+    min-width: 100%;
 }

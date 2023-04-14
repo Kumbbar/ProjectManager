@@ -1,5 +1,5 @@
 from django.forms.utils import ErrorList
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.core.handlers.wsgi import WSGIRequest
@@ -10,6 +10,7 @@ from .services.forms import FormTaskService
 from .filters import *
 from .data_filters import TaskFilter
 from .forms import TaskFileForm, TaskEventForm
+from project_manager.settings import MEDIA_ROOT
 
 
 @login_required
@@ -53,7 +54,6 @@ class UpdateTask(TaskFormView):
 
     def view_postprocess(self):
         self.context['files'] = self.task.get_task_files()
-        print(self.task.get_task_files())
 
 
 @method_decorator(login_required, name='dispatch')
@@ -117,7 +117,7 @@ class CreateTaskFile(TaskFormView):
 
 @method_decorator(login_required, name='dispatch')
 class DeleteTaskFile(DeleteView):
-    redirect_view = 'projects:create_task_file'
+    return_data = HttpResponse("Success")
 
     def delete_object(self):
         file = TaskFileService.get_by_id(self.kwargs['file_id'])

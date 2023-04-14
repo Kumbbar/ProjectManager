@@ -15,7 +15,7 @@ urlpatterns = [
     path('tasks/<int:task_id>/events/delete/<int:file_id>', views.UpdateTaskEvent.as_view(), name='delete_event'),
 
     path('tasks/<int:task_id>/files/create', views.CreateTaskFile.as_view(), name='create_task_file'),
-    path('tasks/<int:task_id>/files/delete/<int:file_id>', views.CreateTaskFile.as_view(), name='create_task_file'),
+    path('tasks/<int:task_id>/files/delete/<int:file_id>', views.DeleteTaskFile.as_view(), name='create_task_file'),
 
     path('api/', include(api_urls)),
 

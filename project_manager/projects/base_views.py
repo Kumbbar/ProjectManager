@@ -55,16 +55,16 @@ class TaskFormView(View):
 
 
 class DeleteView(View):
-    redirect_view: str = None
+    return_data = None
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.kwargs = None
 
-    def delete(self, **kwargs):
+    def post(self, request: WSGIRequest, **kwargs):
         self.kwargs = kwargs
         self.delete_object()
-        return redirect('')
+        return self.return_data
 
     def delete_object(self):
         raise NotImplementedError
