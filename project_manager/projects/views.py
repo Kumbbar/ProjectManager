@@ -4,42 +4,56 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.core.handlers.wsgi import WSGIRequest
 
-from .base_views import TaskFormView, DeleteView
-from .services.db_requests import TaskService, TaskEventService, TaskFileService
+from .base_views import TaskFormView, DeleteView, FilterView, PageView
+from .services.db_requests import TaskService, TaskEventService, TaskFileService, ProjectService
 from .services.forms import FormTaskService
 from .filters import *
-from .data_filters import TaskFilter
+from .data_filters import TaskFilter, ProjectFilter
 from .forms import TaskFileForm, TaskEventForm
-from project_manager.settings import MEDIA_ROOT
 
 
-@login_required
-def get_tasks_page(request: WSGIRequest):
-    tasks = TaskService.get_user_tasks(request.user)
-    task_filter = TaskFilter(request.GET, queryset=tasks)
-    return render(request, 'projects/tasks.html', {'task_filter': task_filter})
+@method_decorator(login_required, name='dispatch')
+class Tasks(FilterView):
+    template = 'projects/tasks.html'
+    filter = TaskFilter
+
+    def get_query_set(self):
+        self.list = TaskService.get_user_tasks(self.request.user)
 
 
-@login_required
-def get_task_page(request: WSGIRequest, task_id: int):
-    task = TaskService.get_user_task_by_id(request.user, task_id)
-    events = task.get_task_events()
-    files = task.get_task_files()
-    return render(
-        request,
-        'projects/task.html',
-        {
-            'task': task,
-            'events': events,
-            'files': files
-        }
-    )
+@method_decorator(login_required, name='dispatch')
+class Projects(FilterView):
+    template = 'projects/projects.html'
+    filter = ProjectFilter
+
+    def get_query_set(self):
+        self.list = ProjectService.get_by_updated_time()
+
+
+@method_decorator(login_required, name='dispatch')
+class TaskPage(PageView):
+    page_template = 'projects/task.html'
+
+    def get_object_data(self):
+        self.object = TaskService.get_user_task_by_id(self.request.user, self.kwargs['task_id'])
+        self.object_events = self.object.get_task_events()
+        self.object_files = self.object.get_task_files()
+
+
+@method_decorator(login_required, name='dispatch')
+class ProjectPage(PageView):
+    page_template = 'projects/project.html'
+
+    def get_object_data(self):
+        self.object = ProjectService.get_by_id(self.kwargs['project_id'])
+        self.object_events = self.object.get_project_events()
+        self.object_files = self.object.get_project_files()
 
 
 @method_decorator(login_required, name='dispatch')
 class UpdateTask(TaskFormView):
     form_template = 'projects/task_update.html'
-    redirect_view = 'projects:get_task_page'
+    redirect_view = 'projects:task'
 
     def fill_form(self):
         if self.request.method == 'POST':
@@ -59,7 +73,7 @@ class UpdateTask(TaskFormView):
 @method_decorator(login_required, name='dispatch')
 class CreateTaskEvent(TaskFormView):
     form_template = 'projects/task_event_create.html'
-    redirect_view = 'projects:get_task_page'
+    redirect_view = 'projects:task'
 
     def fill_form(self):
         self.form = self.form(data=self.request.POST)
@@ -74,7 +88,7 @@ class CreateTaskEvent(TaskFormView):
 @method_decorator(login_required, name='dispatch')
 class UpdateTaskEvent(TaskFormView):
     form_template = 'projects/task_event_update.html'
-    redirect_view = 'projects:get_task_page'
+    redirect_view = 'projects:task'
 
     def fill_form(self):
         event = TaskEventService.get_user_task_event_by_id(self.request.user, self.kwargs['event_id'])
@@ -122,3 +136,12 @@ class DeleteTaskFile(DeleteView):
     def delete_object(self):
         file = TaskFileService.get_by_id(self.kwargs['file_id'])
         file.delete()
+
+
+@method_decorator(login_required, name='dispatch')
+class DeleteTaskEvent(DeleteView):
+    return_data = HttpResponse("Success")
+
+    def delete_object(self):
+        event = TaskEventService.get_user_task_event_by_id(self.request.user, self.kwargs['event_id'])
+        event.delete()

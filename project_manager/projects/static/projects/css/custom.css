@@ -301,3 +301,15 @@ pre{
     min-height: 100%;
     min-width: 100%;
 }
+.delete-event{
+    color: #f64e4e;
+    margin-right: 1%;
+}
+.delete-event:hover{
+    color: #d92f2f;
+    cursor: pointer;
+}
+.edit-link:hover{
+    color: #56b0dc;
+    cursor: pointer;
+}

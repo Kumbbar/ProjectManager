@@ -22,10 +22,14 @@
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
         <![endif]-->
     {% block header %}
-      <li><a class="active" href="{% url "projects:get_tasks_page" %}"><b>Задачи</b></a></li>
-      <li><a href="">Проекты</a></li>
-      <li><a href="">Приглашения</a></li>
-      <li><a href="">Профиль</a></li>
+      <li><a href="{% url "projects:tasks" %}">Задачи</a></li>
+      <li><a href="{% url "projects:projects" %}">Проекты</a></li>
+      {% if request.user.is_staff %}
+        <li><a href="{% url "admin:index" %}">Управление</a></li>
+      {% endif %}
+      <li><a href="{% url "users:profile" %}">Профиль</a></li>
+      <li><a class="active" href="#"><b>Редактировать</b></a></li>
+      <li><a href="{% url "projects:create_event" task.id %}">Создать событие</a></li>
       <li><a href="{% url "projects:create_task_file" task.id %}">Добавить файл</a></li>
     {% endblock %}
     {% block content %}
@@ -41,7 +45,7 @@
                             </table>
                             <button name="submit" class="form-control">Сохранить</button>
                         </form>
-                        <a href="{% url "projects:get_task_page" task.id %}"><button name="" class="form-control close-btn">Отмена</button></a>
+                        <a href="{% url "projects:task" task.id %}"><button name="" class="form-control close-btn">Отмена</button></a>
                         {% if files %}
                             <h3 class="files-title">Файлы:</h3>
                         {% endif %}

@@ -148,7 +148,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Login urls
 
 LOGIN_URL = 'users:login'
-LOGIN_REDIRECT_URL = 'projects:get_tasks_page'
+LOGIN_REDIRECT_URL = 'projects:tasks'
 
 
 if DEBUG:

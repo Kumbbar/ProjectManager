@@ -84,6 +84,7 @@ class ProjectStatus(BaseDescription):
 
 class Project(BaseDescription):
     name = models.CharField(max_length=200, null=False, unique=True, verbose_name='Название')
+    description = models.TextField(max_length=3000, null=True, blank=True, verbose_name='Описание')
     created_at = models.DateTimeField(auto_now_add=True,  verbose_name='Создано')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлено')
     director = models.ForeignKey(
@@ -91,22 +92,32 @@ class Project(BaseDescription):
         on_delete=models.SET_NULL,
         null=True,
         related_name='director',
-        verbose_name='Руководитель')
+        verbose_name='Руководитель'
+    )
     users = models.ManyToManyField(User, verbose_name='Пользователи')
-    project_status = models.ForeignKey(ProjectStatus, on_delete=models.SET_NULL, null=True, verbose_name='Статус проекта')
+    project_status = models.ForeignKey(
+        ProjectStatus,
+        on_delete=models.SET_NULL,
+        null=True,
+        verbose_name='Статус проекта'
+    )
 
     class Meta:
         db_table = 'projects'
         verbose_name = 'Проект'
         verbose_name_plural = 'Проекты'
 
+    def get_project_events(self) -> QuerySet:
+        return ProjectDocumentationNote.objects.filter(project=self).order_by('-created_at')
 
-class ProjectDocumentation(BaseDescription):
-    project = models.OneToOneField(Project, on_delete=models.CASCADE, verbose_name='jopa')
+    def get_project_files(self) -> QuerySet:
+        return ProjectFileStorage.objects.filter(project=self)
 
 
-class DocumentationNote(BaseDescription):
-    documentation = models.ForeignKey(ProjectDocumentation, on_delete=models.CASCADE, verbose_name='jopa')
+class ProjectDocumentationNote(BaseDescription):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, verbose_name='Проект')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создано')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлено')
 
 
 class Task(BaseDescription):
@@ -184,25 +195,3 @@ class TaskFileStorage(BaseFileStorage):
 
     class Meta:
         db_table = 'task_files'
-
-
-class TaskEventFileStorage(BaseFileStorage):
-    path = 'task_events/%Y/%m/%d/'
-    file = models.FileField(upload_to=path, **BaseFileStorage.base_params, verbose_name='Файл')
-    task_event = models.ForeignKey(TaskEvent, on_delete=models.CASCADE, null=False, verbose_name='Событие задачи')
-
-    class Meta:
-        db_table = 'task_event_files' 
-
-
-class DocumentationNoteFileStorage(BaseFileStorage):
-    path = 'documentation_notes/%Y/%m/%d/'
-    file = models.FileField(upload_to=path, **BaseFileStorage.base_params, verbose_name='Файл')
-    documentation_note = models.ForeignKey(
-        DocumentationNote,
-        on_delete=models.CASCADE,
-        null=False,
-        verbose_name='Запись документации')
-
-    class Meta:
-        db_table = 'documentation_files' 

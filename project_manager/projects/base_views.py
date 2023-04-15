@@ -2,7 +2,50 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import render, redirect
 from django.views import View
 
-from .services.db_requests import TaskService
+from .services.db_requests import TaskService, ProjectService
+
+
+class FilterView(View):
+    template: str = None
+    filter = None
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.context = {}
+        self.list = {}
+
+    def get(self, request: WSGIRequest):
+        self.get_query_set()
+        data_filter = self.filter(request.GET, queryset=self.list)
+        return render(request, self.template, {'filter': data_filter})
+
+    def get_query_set(self):
+        raise NotImplementedError
+
+
+class PageView(View):
+    page_template: str = None
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.context = {}
+        self.kwargs = {}
+        self.object = {}
+        self.object_events = []
+        self.object_files = []
+
+    def get(self, request: WSGIRequest, **kwargs):
+        self.kwargs = kwargs
+        self.get_object_data()
+        context = {
+            'object': self.object,
+            'object_files': self.object_files,
+            'object_events': self.object_events
+        }
+        return render(request, self.page_template, context)
+
+    def get_object_data(self):
+        raise NotImplementedError
 
 
 class TaskFormView(View):

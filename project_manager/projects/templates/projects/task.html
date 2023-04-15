@@ -8,7 +8,7 @@
 
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Задача - {{ task.name }}</title>
+    <title>Задача - {{ object.name }}</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
     <meta name="description" content="">
@@ -22,35 +22,35 @@
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
         <![endif]-->
     {% block header %}
-      <li><a class="active" href="{% url "projects:get_tasks_page" %}"><b>Задачи</b></a></li>
-      <li><a href="">Проекты</a></li>
+      <li><a class="active" href="{% url "projects:tasks" %}"><b>Задачи</b></a></li>
+      <li><a href="{% url "projects:projects" %}">Проекты</a></li>
       {% if request.user.is_staff %}
-        <li><a href="admin/">Управление</a></li>
+        <li><a href="{% url "admin:index" %}">Управление</a></li>
       {% endif %}
-      <li><a href="">Профиль</a></li>
-      <li><a href="{% url "projects:update_task" task.id %}">Редактировать</a></li>
-      <li><a href="{% url "projects:create_event" task.id %}">Создать событие</a></li>
-      <li><a href="{% url "projects:create_task_file" task.id %}">Добавить файл</a></li>
+      <li><a href="{% url "users:profile" %}">Профиль</a></li>
+      <li><a href="{% url "projects:update_task" object.id %}">Редактировать</a></li>
+      <li><a href="{% url "projects:create_event" object.id %}">Создать событие</a></li>
+      <li><a href="{% url "projects:create_task_file" object.id %}">Добавить файл</a></li>
     {% endblock %}
     {% block content %}
     <div class="about_area">
         <div class="container">
             <div class="row align-items-center">
                     <div class="about_thumb">
-                        <h3 class="tasks-title no-wrap-break">{{ task.name }}</h3>
-                        {% if task.description %}
-                          <h3 class="task-description no-wrap-break">{{ task.description | convert_markdown | safe }}</h3>
+                        <h3 class="tasks-title no-wrap-break">{{ object.name }}</h3>
+                        {% if object.description %}
+                          <h3 class="task-description no-wrap-break">{{ object.description | convert_markdown | safe }}</h3>
                         {% else %}
                           <h3 class="tasks-title">Нет описания</h3>
                         {% endif %}
-                        {% if files %}
+                        {% if object_files %}
                             <h3 class="files-title">Файлы:</h3>
                         {% endif %}
-                        {% for file in files %}
+                        {% for file in object_files %}
                             <a class="file-link" href="{{ file.get_absolute_url }}" target="_blank" tabindex="1">{{ file.get_filename }}</a>
                         {% endfor %}
-                        {% for event in events %}
-                            <table border="1" style="width: 100%;" class="event">
+                        {% for event in object_events %}
+                            <table border="1" style="width: 100%;" class="event" id="{{ event.id }}-table">
                                 <tr>
                                     <td>
                                         <h5 class="event-name no-wrap-break">{{ event.name }}</h5>
@@ -63,7 +63,7 @@
                                         <p></p>
                                         <h5 class="event-description no-wrap-break text-right">Создано: {{ event.created_at | format_date }}<br>Обновлено: {{ event.updated_at|format_date }}</h5>
                                         <p></p>
-                                        <h5 class="event-description no-wrap-break text-right"><a href="{% url "projects:update_event" task.id event.id %}">Редактировать</a></h5>
+                                        <h5 class="event-description no-wrap-break text-right"><delete class="delete-event" id="{{ event.id }}">Удалить</delete><b><a href="{% url "projects:update_event" object.id event.id %}" class="edit-link">Редактировать</a></b></h5>
                                     </td>
                                 </tr>
                                 {% endif %}
@@ -74,6 +74,11 @@
         </div>
     </div>
     {% endblock %}d
-
 </body>
+    {% block scripts %}
+      <script type="text/javascript">
+        var taskId = {{ object.id }};
+      </script>
+      <script src="{% static 'projects/js/deleteEvents.js' %}"></script>
+    {% endblock %}
 </html>
