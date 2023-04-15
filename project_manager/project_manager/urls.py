@@ -26,3 +26,6 @@ urlpatterns = [
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+handler404 = "project_manager.views.page_not_found"
+handler500 = "project_manager.views.server_error"

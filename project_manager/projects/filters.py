@@ -2,7 +2,6 @@ from django.template.defaulttags import register
 from django.template.defaultfilters import stringfilter
 
 import markdown
-from markdown.extensions import codehilite, fenced_code
 
 from datetime import datetime, date
 

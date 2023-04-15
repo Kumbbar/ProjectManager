@@ -1,8 +1,9 @@
 from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import render, redirect
 from django.views import View
+from django.forms import ModelForm
 
-from .services.db_requests import TaskService, ProjectService
+from .services.db_requests import TaskService
 
 
 class FilterView(View):
@@ -12,14 +13,14 @@ class FilterView(View):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.context = {}
-        self.list = {}
+        self.query_set = {}
 
-    def get(self, request: WSGIRequest):
+    def get(self, request: WSGIRequest) -> render:
         self.get_query_set()
-        data_filter = self.filter(request.GET, queryset=self.list)
+        data_filter = self.filter(request.GET, queryset=self.query_set)
         return render(request, self.template, {'filter': data_filter})
 
-    def get_query_set(self):
+    def get_query_set(self) -> None:
         raise NotImplementedError
 
 
@@ -34,7 +35,7 @@ class PageView(View):
         self.object_events = []
         self.object_files = []
 
-    def get(self, request: WSGIRequest, **kwargs):
+    def get(self, request: WSGIRequest, **kwargs) -> render:
         self.kwargs = kwargs
         self.get_object_data()
         context = {
@@ -44,7 +45,7 @@ class PageView(View):
         }
         return render(request, self.page_template, context)
 
-    def get_object_data(self):
+    def get_object_data(self) -> None:
         raise NotImplementedError
 
 
@@ -60,20 +61,20 @@ class TaskFormView(View):
         self.form = None
         self.kwargs = {}
 
-    def get_form(self, task_id: int):
+    def get_form(self, task_id: int) -> (None, ModelForm):
         raise NotImplementedError
 
-    def fill_form(self):
+    def fill_form(self) -> (None, ModelForm):
         pass
 
-    def get(self, request: WSGIRequest, task_id: int, **kwargs):
+    def get(self, request: WSGIRequest, task_id: int, **kwargs) -> render:
         self.kwargs = kwargs
         self.view_preprocess(task_id)
 
         self.view_postprocess()
         return render(request, self.form_template, self.context)
 
-    def post(self, request: WSGIRequest, task_id: int, **kwargs):
+    def post(self, request: WSGIRequest, task_id: int, **kwargs) -> (render, redirect):
         self.kwargs = kwargs
         self.view_preprocess(task_id)
 
@@ -88,12 +89,12 @@ class TaskFormView(View):
         self.view_postprocess()
         return render(request, self.form_template, self.context)
 
-    def view_preprocess(self, task_id):
+    def view_preprocess(self, task_id: int) -> None:
         self.task = TaskService.get_user_task_by_id(self.request.user, task_id)
         self.form = self.get_form(task_id)
         self.context.update({'task': self.task, 'form': self.form})
 
-    def view_postprocess(self):
+    def view_postprocess(self) -> None:
         pass
 
 
@@ -104,11 +105,10 @@ class DeleteView(View):
         super().__init__(**kwargs)
         self.kwargs = None
 
-    def post(self, request: WSGIRequest, **kwargs):
+    def post(self, request: WSGIRequest, **kwargs) -> return_data:
         self.kwargs = kwargs
         self.delete_object()
         return self.return_data
 
-    def delete_object(self):
+    def delete_object(self) -> None:
         raise NotImplementedError
-

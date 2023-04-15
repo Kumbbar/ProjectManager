@@ -119,6 +119,11 @@ class ProjectDocumentationNote(BaseDescription):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создано')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлено')
 
+    class Meta:
+        db_table = 'project_notes'
+        verbose_name = 'Запись проекта'
+        verbose_name_plural = 'Записи проектов'
+
 
 class Task(BaseDescription):
     description = models.TextField(max_length=1500, null=True, blank=True, verbose_name='Описание')
@@ -186,6 +191,8 @@ class ProjectFileStorage(BaseFileStorage):
 
     class Meta:
         db_table = 'project_files'
+        verbose_name = 'Файл проекта'
+        verbose_name_plural = 'Файлы проектов'
 
 
 class TaskFileStorage(BaseFileStorage):
@@ -195,3 +202,5 @@ class TaskFileStorage(BaseFileStorage):
 
     class Meta:
         db_table = 'task_files'
+        verbose_name = 'Файл задачи'
+        verbose_name_plural = 'Файлы задач'
