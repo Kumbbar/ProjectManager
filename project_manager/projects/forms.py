@@ -47,7 +47,8 @@ class TaskFormDirector(TaskFormUser):
                 'class': 'form-control text',
                 'type': 'date'
             }
-        )
+        ),
+        required=False
     )
     
     class Meta:

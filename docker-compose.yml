@@ -8,6 +8,9 @@ services:
     env_file:
       - project_manager/.env
     command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - /host:/app/data/media
+      - /host:/app/data/database
     ports:
       - '8000'
 
@@ -17,6 +20,8 @@ services:
     restart: always
     depends_on:
       - project_manager
+    volumes:
+      - /host:/app/media
     ports:
       - "80:80"
 

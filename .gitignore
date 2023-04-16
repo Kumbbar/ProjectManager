@@ -17,3 +17,5 @@ project_manager/__pycache__/urls.cpython-36.pyc
 .vs
 .vs/
 project_manager/media/
+/project_manager/data/media/projects/
+/project_manager/data/media/tasks/
