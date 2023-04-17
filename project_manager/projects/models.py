@@ -66,6 +66,8 @@ class BaseFileStorage(models.Model):
         os.remove(MEDIA_ROOT + self.file.name)
         return super(BaseFileStorage, self).delete(using, keep_parents)
 
+    get_filename.short_description = 'Файл'
+
 
 # MODELS
 class TaskStatus(BaseDescription):

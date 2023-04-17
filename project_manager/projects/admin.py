@@ -30,12 +30,15 @@ class ProjectDocumentationNoteAdmin(BaseAdmin):
 
 class TaskFileStorageAdmin(admin.ModelAdmin):
     list_filter = ('task',)
-    list_display = ['file', 'task']
+    list_display = ['get_filename', 'task']
+
+
+
 
 
 class ProjectFileStorageAdmin(admin.ModelAdmin):
     list_filter = ('project',)
-    list_display = ['file', 'project']
+    list_display = ['get_filename', 'project']
 
 
 admin.site.register(Task, TaskAdmin)
