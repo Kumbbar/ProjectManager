@@ -33,9 +33,6 @@ class TaskFileStorageAdmin(admin.ModelAdmin):
     list_display = ['get_filename', 'task']
 
 
-
-
-
 class ProjectFileStorageAdmin(admin.ModelAdmin):
     list_filter = ('project',)
     list_display = ['get_filename', 'project']
