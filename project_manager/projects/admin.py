@@ -9,7 +9,7 @@ class BaseAdmin(admin.ModelAdmin):
 
 
 class TaskAdmin(BaseAdmin):
-    list_filter = ('user', 'project')
+    list_filter = ('user', 'project', 'task_status')
     list_display = ['name', 'user', 'project', 'created_at', 'task_status', 'percentage_of_completion']
 
 
