@@ -134,7 +134,7 @@ class DeleteTaskFile(DeleteView):
     return_data = HttpResponse("Success")
 
     def delete_object(self) -> None:
-        file = TaskFileService.get_by_id(self.kwargs['file_id'])
+        file = TaskFileService.get_user_task_file_by_id(self.request.user, self.kwargs['file_id'])
         file.delete()
 
 

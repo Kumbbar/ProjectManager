@@ -9,19 +9,33 @@ class BaseAdmin(admin.ModelAdmin):
 
 
 class TaskAdmin(BaseAdmin):
-    list_display = ['name', 'user', 'project', 'created_at', 'updated_at', 'percentage_of_completion', 'task_status']
+    list_filter = ('user', 'project')
+    list_display = ['name', 'user', 'project', 'created_at', 'task_status', 'percentage_of_completion']
 
 
 class TaskEventAdmin(BaseAdmin):
+    list_filter = ('task',)
     list_display = ['name', 'task', 'created_at', 'updated_at']
 
 
 class ProjectAdmin(BaseAdmin):
+    list_filter = ('director',)
     list_display = ['name', 'created_at', 'director', 'project_status']
 
 
 class ProjectDocumentationNoteAdmin(BaseAdmin):
+    list_filter = ('project',)
     list_display = ['name', 'project', 'created_at', 'updated_at']
+
+
+class TaskFileStorageAdmin(admin.ModelAdmin):
+    list_filter = ('task',)
+    list_display = ['file', 'task']
+
+
+class ProjectFileStorageAdmin(admin.ModelAdmin):
+    list_filter = ('project',)
+    list_display = ['file', 'project']
 
 
 admin.site.register(Task, TaskAdmin)
@@ -33,5 +47,5 @@ admin.site.register(ProjectDocumentationNote, ProjectDocumentationNoteAdmin)
 admin.site.register(ProjectStatus)
 admin.site.register(TaskStatus)
 
-admin.site.register(TaskFileStorage)
-admin.site.register(ProjectFileStorage)
+admin.site.register(TaskFileStorage, TaskFileStorageAdmin)
+admin.site.register(ProjectFileStorage, ProjectFileStorageAdmin)

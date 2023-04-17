@@ -36,12 +36,10 @@ class TaskService(BaseService):
 
 class TaskEventService(BaseService):
     @classmethod
+    @BaseService.not_exist_decorator
     def get_user_task_event_by_id(cls, user: User, event_id: int) -> Task:
-        try:
             event = TaskEvent.objects.select_related('task').get(id=event_id, task__user=user)
             return event
-        except TaskEvent.DoesNotExist:
-            raise Http404('Такого события не существует')
 
     @classmethod
     def get_user_tasks(cls, user: User) -> QuerySet:
@@ -50,8 +48,10 @@ class TaskEventService(BaseService):
 
 class TaskFileService(BaseService):
     @classmethod
-    def get_by_id(cls, file_id: int):
-        return TaskFileStorage.objects.get(id=file_id)
+    @BaseService.not_exist_decorator
+    def get_user_task_file_by_id(cls, user: User, file_id: int):
+        file = TaskFileStorage.objects.get(id=file_id, task__user=user)
+        return file
 
 
 # PROJECTS SERVICES
